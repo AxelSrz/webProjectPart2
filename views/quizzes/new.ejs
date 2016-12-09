@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+</html>
+<head>
+  <title>Contoh CRUD Node.js-MySQL</title>
+  <link href="/../stylesheets/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    var questions = <%- JSON.stringify(questions) %>;
+    var answers = <%- JSON.stringify(answers) %>;
+    var categories = <%- JSON.stringify(categories) %>;
+  </script>
+  <script type="text/javascript" src="/../javascripts/all.js"></script>
+</head>
+<body>
+  <div id="wrapper">
+    <div class="page-header"><h2><%=title%></h2></div>
+    <div class="page-container">
+
+      <div class="container">
+        <form method="post" action="/quizzes/add">
+          Title: <input type="text" name="question" required /></td>
+          <div class="container" id="questionsContainer">
+
+          </div>
+          <br />
+          <input type="button" class="btn btn-default" value="Remove last question" onclick="removeQuestionForm()" />
+          <br />
+          <br />
+          <input type="text" id="categoryFilter" />
+          &nbsp; <input type="button" class="btn btn-primary" value="Search by category" onClick="searchByCategory()" />
+          <br />
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Question</th>
+                <th>Correct Answer</th>
+                <th>All answers</th>
+                <th>Categories</th>
+                <th>Add to quiz</th>
+              </tr>
+            </thead>
+            <tbody id="questionsTable">
+
+            </tbody>
+          </table>
+          <br />
+          <br />
+          &nbsp; <input type="submit" name="submit" value="Save" />
+          <input type="button" name="cancel" value="Cancel" class="cancel" onClick="cancelAdd()">
+        </form>
+      </div>
+
+      <%- include ../layouts/footer.ejs %>

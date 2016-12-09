@@ -1,0 +1,43 @@
+<%- include ../layouts/header.ejs %>
+
+<div class="page-data">
+  <div class="data-btn">
+    <a href="/quizzes/add" class="btn">+ Add</a>
+  </div>
+  <div class="container">
+    <table class="table table-striped">
+      <tr>
+        <th width="50px">No</th>
+        <th>title</th>
+        <th>Number of questions</th>
+        <th>Modify</th>
+      </tr>
+
+      <% if(quizzes.length){
+
+        quizzes.forEach(function(quiz, index) { %>
+
+          <tr>
+            <td><%= quiz._id%></td>
+            <td><%= quiz.title%></td>
+            <td><%= quiz.questions.length %></td>
+            <td>
+              <a class="a-inside edit" href="../quizzes/edit/<%=quiz._id%>">View/Edit</a>
+              <a class="a-inside delete" href="../quizzes/delete/<%=quiz._id%>">Delete</a>
+            </td>
+          </tr>
+          <% });
+
+        }else{ %>
+          <tr>
+            <td colspan="3">No quizzes added</td>
+          </tr>
+          <% } %>
+
+
+
+        </table>
+      </div>
+    </div>
+
+    <%- include ../layouts/footer.ejs %>
