@@ -10,8 +10,14 @@
     var questions = <%- JSON.stringify(questions) %>;
     var answers = <%- JSON.stringify(answers) %>;
     var categories = <%- JSON.stringify(categories) %>;
+    var currentQuiz = <%- JSON.stringify(quiz) %>;
     questions.forEach(function(question, index){
-      question.selected = false;
+      question.selected = currentQuiz.questions.indexOf(question.questionId) >= 0;
+    });
+    $(function(){
+	     currentQuiz.questions.forEach(function(element, index) {
+	       addQuestionToForm(element);
+	     });
     });
   </script>
   <script type="text/javascript" src="/../javascripts/all.js"></script>
@@ -22,8 +28,8 @@
     <div class="page-container">
 
       <div class="container">
-        <form method="post" action="/quizzes/add" onsubmit="return validateQuizForm()" >
-          <label style="font-size: 18px;">Quiz Title: &nbsp;</label><input type="text" name="title" required /></td>
+        <form method="post" action="/quizzes/edit/<%=quiz._id%>" onsubmit="return validateQuizForm()" >
+          <label style="font-size: 18px;">Quiz Title: &nbsp;</label><input type="text" name="title" value="<%= quiz.title %>" required /></td>
           <br />
           <div class="container" id="questionsContainer" style="margin-top: 8px;">
 

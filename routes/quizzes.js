@@ -28,9 +28,8 @@ exports.list = function(req, res){
 //POST a new quizz
 exports.save = function(req, res){
   // Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
-  var name = req.body.title;
-  var questions = req.body.questions;
-  //call the create function for our database
+  var title = req.body.title;
+  var questions = req.body.quizQuestions;
   mongoose.model('Quiz').create({
     title : title,
     questions : questions
@@ -70,7 +69,6 @@ exports.add = function(req, res){
         connection.query('SELECT * FROM category',function(err, categories) {
           if(err)
           console.log("Error Selecting : %s ",err );
-          debugger;
           res.render('quizzes/new', {
             title: 'Add New Quiz',
             'questions': questions,
@@ -84,7 +82,7 @@ exports.add = function(req, res){
 };
 
 exports.show = function(req, res){
-  mongoose.model('Quiz').findById(req.id, function (err, quiz) {
+  mongoose.model('Quiz').findById(req.params.id, function (err, quiz) {
     if (err) {
       console.log('GET Error: There was a problem retrieving: ' + err);
     } else {
@@ -105,7 +103,7 @@ exports.show = function(req, res){
 
 exports.edit = function(req, res){
   //search for the quiz within Mongo
-  mongoose.model('Quiz').findById(req.id, function (err, quiz) {
+  mongoose.model('Quiz').findById(req.params.id, function (err, quiz) {
     if (err) {
       console.log('GET Error: There was a problem retrieving: ' + err);
     } else {
@@ -114,9 +112,27 @@ exports.edit = function(req, res){
       res.format({
         //HTML response will render the 'edit.jade' template
         html: function(){
-          res.render('quizzes/edit', {
-            title: 'Quiz' + quiz._id,
-            "quiz" : quiz
+          req.getConnection(function(err,connection){
+            var query = connection.query('SELECT * FROM questions',function(err,questions)
+            {
+              if(err)
+              console.log("Error Selecting : %s ",err );
+              connection.query('SELECT * FROM answers',function(err, answers) {
+                if(err)
+                console.log("Error Selecting : %s ",err );
+                connection.query('SELECT * FROM category',function(err, categories) {
+                  if(err)
+                  console.log("Error Selecting : %s ",err );
+                  res.render('quizzes/edit', {
+                    title: 'Quiz no.'+quiz._id,
+                    'questions': questions,
+                    'answers': answers,
+                    'categories': categories,
+                    'quiz': quiz
+                  });
+                });
+              });
+            });
           });
         },
         //JSON response will return the JSON output
@@ -130,11 +146,10 @@ exports.edit = function(req, res){
 
 exports.save_edit = function(req, res){
   // Get our REST or form values. These rely on the "name" attributes
-  var name = req.body.title;
-  var questions = req.body.questions;
-
+  var title = req.body.title;
+  var questions = req.body.quizQuestions;
   //find the document by ID
-  mongoose.model('Quiz').findById(req.id, function (err, quiz) {
+  mongoose.model('Quiz').findById(req.params.id, function (err, quiz) {
     //update it
     quiz.update({
       title : title,
@@ -147,7 +162,7 @@ exports.save_edit = function(req, res){
         //HTML responds by going back to the page or you can be fancy and create a new view that shows a success page.
         res.format({
           html: function(){
-            res.redirect("/quizzes/" + quiz._id);
+            res.redirect("/quizzes");
           },
           //JSON responds showing the updated values
           json: function(){
@@ -161,7 +176,7 @@ exports.save_edit = function(req, res){
 //DELETE a Quiz by ID
 exports.delete_quizz = function(req, res){
   //find quiz by ID
-  mongoose.model('Quiz').findById(req.id, function (err, quiz) {
+  mongoose.model('Quiz').findById(req.params.id, function (err, quiz) {
     if (err) {
       return console.error(err);
     } else {
