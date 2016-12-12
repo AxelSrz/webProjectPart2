@@ -6,6 +6,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var index = require('./routes/index');
 var quizzes = require('./routes/quizzes');
@@ -50,8 +51,9 @@ app.use(session({secret: 'shhhhhhhhhhh',
                  saveUninitialized: true,
                  cookie: { secure: true }}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors());
 
-app.get('/', index);
+app.get('/', quizzes.list);
 app.get('/quizzes', quizzes.list);
 app.get('/quizzes/add', quizzes.add);
 app.post('/quizzes/add', quizzes.save);

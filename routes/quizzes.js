@@ -148,6 +148,8 @@ exports.save_edit = function(req, res){
   // Get our REST or form values. These rely on the "name" attributes
   var title = req.body.title;
   var questions = req.body.quizQuestions;
+
+  debugger;
   //find the document by ID
   mongoose.model('Quiz').findById(req.params.id, function (err, quiz) {
     //update it

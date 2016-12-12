@@ -112,3 +112,8 @@ function validateQuizForm() {
     return false
   }
 }
+
+function cancelAdd(){
+
+  window.location.href = '/';
+}
